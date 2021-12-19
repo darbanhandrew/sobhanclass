@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "graphene_django",
+    'guardian',
     'userprofile',
 ]
 
@@ -49,7 +51,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+AUTHENTICATION_BACKENDS = (
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    'django.contrib.auth.backends.ModelBackend',  # default
+    'guardian.backends.ObjectPermissionBackend',
+)
 ROOT_URLCONF = 'bimeh.urls'
 
 TEMPLATES = [
@@ -124,3 +130,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'userprofile.User'
+GRAPHENE = {
+    "SCHEMA": "bimeh.schema.schema",
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    ],
+}
