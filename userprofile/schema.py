@@ -42,6 +42,7 @@ class UserQuery(ObjectType):
 
 
 # Mutations
+# All Mutations related to users are defined here
 class UserCreateMutation(ModelCreateMutation):
     class Meta:
         model = User
