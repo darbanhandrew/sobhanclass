@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from graphene_django_plus.models import GuardedModel
 from random import randint
+from .smshelper import send_sms
 # Create your models here.
 
 
@@ -39,9 +40,11 @@ class OTP(models.Model):
 
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_profile(sender, instance: User, created, **kwargs):
     if created:
-        OTP.objects.create(user=instance)
+        otp = OTP.objects.create(user=instance)
+        if otp:
+            send_sms(otp.user.phone_number, otp.otp)
 
 
 @receiver(post_save, sender=OTP)
